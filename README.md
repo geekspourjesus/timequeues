@@ -1,4 +1,0 @@
-timequeues
-==========
-
-Timequeues for asterisk
