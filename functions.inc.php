@@ -41,9 +41,9 @@ class ext_Execiftime extends extension {
           // note we don't need to add 2nd optional option of true, gotoiftime will convert '|' to ',' for 1.6+
 					$times = timeconditions_timegroups_get_times($item['time']);
 $queueno = $item['timequeue'];
-$queueno = substr(trim($queueno),11,3);
+//$queueno = substr(trim($queueno),11,3);
 $extno = $item['agent'];
-$extno = substr(trim($extno),11,3);
+//$extno = substr(trim($extno),11,3);
 $ext->add('ext-did', s, '',new ext_removequeuemember($queueno,'SIP/'.$extno));
 					if (is_array($times))
 				{
