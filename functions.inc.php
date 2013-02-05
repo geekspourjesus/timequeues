@@ -44,12 +44,12 @@ $queueno = $item['timequeue'];
 //$queueno = substr(trim($queueno),11,3);
 $extno = $item['agent'];
 //$extno = substr(trim($extno),11,3);
-$ext->add('ext-did-001', s, '',new ext_removequeuemember($queueno,'SIP/'.$extno));
+$ext->add('ext-did-0001', s, '',new ext_removequeuemember($queueno,'SIP/'.$extno));
 					if (is_array($times))
 				{
 						foreach ($times as $time)
 					{
-							$ext->add('ext-did-001', s, '', new  ext_Execiftime($time[1],'AddQueueMember('.$queueno.',Local/'.$extno.'@from-queue/n)'));
+							$ext->add('ext-did-0001', s, '', new  ext_Execiftime($time[1],'AddQueueMember('.$queueno.',Local/'.$extno.'@from-queue/n)'));
 
 					}
 				}
