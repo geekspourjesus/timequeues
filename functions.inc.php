@@ -49,7 +49,7 @@ $ext->add('ext-did-0001', s, '',new ext_removequeuemember($queueno,'Local/'.$ext
 				{
 						foreach ($times as $time)
 					{
-							$ext->add('ext-did-0001', s, '', new  ext_Execiftime($time[1],'AddQueueMember('.$queueno.',Local/'.$extno.'@queue/n,,,sip/'.$extno.')'));
+							$ext->add('ext-did-0001', s, '', new  ext_Execiftime($time[1],'AddQueueMember('.$queueno.',Local/'.$extno.'@queue/n,,,,sip/'.$extno.')'));
 
 					}
 				}
