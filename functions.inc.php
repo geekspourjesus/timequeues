@@ -4,27 +4,6 @@
 
 function timequeues_get_config($engine) 
 {
-class ext_Execiftime extends extension {
-	  var $true_priority;
- 	  var $condition;
- 	  function ext_Execiftime($condition, $true_priority) {
- 	      global $version;
- 	      if (version_compare($version, "1.6", "ge")) {
- 	    //change from '|' to ','
- 	    $this->condition = str_replace("|", ",", $condition);
- 	        }
- 	    else {
- 	        $this->condition = $condition;
- 	        }
- 	    $this->true_priority = $true_priority;
- 	  }
- 	  function output() {
- 	    return 'ExecIfTime(' .$this->condition. '?' .$this->true_priority. ')' ;
- 	  }
- 	  function incrementContents($value) {
- 	    $this->true_priority += $value;
- 	  }
- 	}
 
 	global $ext;  // is this the best way to pass this?
 	global $conferences_conf;
@@ -44,6 +23,7 @@ $queueno = $item['timequeue'];
 //$queueno = substr(trim($queueno),11,3);
 $extno = $item['agent'];
 //$extno = substr(trim($extno),11,3);
+if ($item['enabled']=1) {
 $ext->add('ext-did-0001', s, '',new ext_removequeuemember($queueno,'Local/'.$extno.'@from-queue/n'));
 					if (is_array($times))
 				{
@@ -53,7 +33,7 @@ $ext->add('ext-did-0001', s, '',new ext_removequeuemember($queueno,'Local/'.$ext
 
 					}
 				}
-
+}
 			}
 		}
 		break;
@@ -67,7 +47,7 @@ function timequeues_check_destinations($dest=true) {
 	if (is_array($dest) && empty($dest)) {
 		return $destlist;
 	}
-	$sql = "SELECT timeconditions_id, displayname, timequeue, agent FROM timeconditions ";
+	$sql = "SELECT timeconditions_id, displayname, timequeue, agent, enabled FROM timeconditions ";
 	if ($dest !== true) {
 		$sql .= "WHERE (timequeue in ('".implode("','",$dest)."') ) OR (agent in ('".implode("','",$dest)."') )";
 	}
