@@ -67,7 +67,7 @@ function timequeues_check_destinations($dest=true) {
 	if (is_array($dest) && empty($dest)) {
 		return $destlist;
 	}
-	$sql = "SELECT timeconditions_id, displayname, timequeue, agent FROM timeconditions ";
+	$sql = "SELECT timeconditions_id, displayname, timequeue, agent, enabled FROM timeconditions ";
 	if ($dest !== true) {
 		$sql .= "WHERE (timequeue in ('".implode("','",$dest)."') ) OR (agent in ('".implode("','",$dest)."') )";
 	}
@@ -88,6 +88,14 @@ function timequeues_check_destinations($dest=true) {
 			);
 		}
 		$thisdest = $result['agent'];
+		if ($dest === true || $dest = $thisdest) {
+			$destlist[] = array(
+				'dest' => $thisdest,
+				'description' => $description,
+				'edit_url' => $thisurl,
+			);
+		}
+		$thisdest = $result['enabled'];
 		if ($dest === true || $dest = $thisdest) {
 			$destlist[] = array(
 				'dest' => $thisdest,
