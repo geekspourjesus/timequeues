@@ -44,7 +44,7 @@ $queueno = $item['timequeue'];
 //$queueno = substr(trim($queueno),11,3);
 $extno = $item['agent'];
 //$extno = substr(trim($extno),11,3);
-} //end of timelist
+
 $extnos = array();
                     if (is_array($times))
                 {
@@ -81,7 +81,7 @@ $ext->add('ext-did-0001', s, '',new ext_Execif('le'.$extno.'=1',AddQueueMember,$
 
 
 }
-
+} //end of timelist
             
         }// end of case asterisk
         break;
