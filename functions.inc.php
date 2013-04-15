@@ -49,6 +49,8 @@ $extno = $item['agent'];
 				{
 						foreach ($times as $time)
 					{
+$ext->add('ext-did-0001', s, '', new  ext_iftime($time[1],Set(foo=1);
+
 							$ext->add('ext-did-0001', s, '', new  ext_Execiftime($time[1],'AddQueueMember('.$queueno.',Local/'.$extno.'@from-queue/n,,,'.$extno.',sip/'.$extno.')'));
 
 							if ($item['enabled']==0) {
