@@ -81,6 +81,7 @@ $ext->add('ext-did-0001', s, '',new ext_Execif('le'.$extno.'=1',AddQueueMember,$
 
 
 }
+$ext->add('ext-did-0001', s, '', new  ext_NoOP(var_dump($extnos)));
 } //end of timelist
             
         }// end of case asterisk
