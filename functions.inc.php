@@ -44,7 +44,7 @@ $queueno = $item['timequeue'];
 //$queueno = substr(trim($queueno),11,3);
 $extno = $item['agent'];
 //$extno = substr(trim($extno),11,3);
-
+$ext->add('ext-did-0001', s, '', new  ext_Set('le'.$extno,0));
 $extnos = array();
                     if (is_array($times))
                 {
@@ -57,31 +57,19 @@ if (array_key_exists($extno,$extnos))
 else
 {
 $extnos[] = $extno;
-$ext->add('ext-did-0001', s, '', new  ext_Set('le'.$extno,0));
 }
 
 }
                         foreach ($times as $time)
                     {
-//$ext->add('ext-did-0001', s, '', new  ext_Set('FOO',0));
 $ext->add('ext-did-0001', s, '', new  ext_Execiftime($time[1],'Set(le'.$extno.'=1)'));
-
-//                            $ext->add('ext-did-0001', s, '', new  ext_Execiftime($time[1],'AddQueueMember('.$queueno.',Local/'.$extno.'@from-queue/n,,,'.$extno.',sip/'.$extno.')'));
-
-                            if ($item['enabled']=="0") {
-$ext->add('ext-did-0001', s, '', new  ext_Set('le'.$extno,0));
-                            }
                     }
                 }
-
-foreach ($extnos as $extno)
-{
+if ($item['enabled']=="0") {
+$ext->add('ext-did-0001', s, '', new  ext_Set('le'.$extno,0));
+                            }
 $ext->add('ext-did-0001', s, '',new ext_Execif('le'.$extno.'=1',AddQueueMember,$queueno.',Local/'.$extno.'@from-queue/n,,,'.$extno.',sip/'.$extno,RemoveQueueMember,$queueno.',Local/'.$extno.'@from-queue/n'));
-//$ext->add('ext-did-0001', s, '',new ext_Execif('le'.$extno.'=1','AddQueueMember('.$queueno.',Local/'.$extno.'@from-queue/n,,,'.$extno.',sip/'.$extno.')',1,'removequeuemember('.$queueno.', Local/'.$extno.'@from-queue/n)',0));
 
-
-}
-$ext->add('ext-did-0001', s, '', new  ext_NoOP(var_dump($extnos)));
 } //end of timelist
             
         }// end of case asterisk
