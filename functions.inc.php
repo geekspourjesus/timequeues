@@ -66,7 +66,7 @@ $ext->add('ext-did-0001', s, '', new  ext_Execiftime($time[1],'Set(le'.$extno.'=
                     }
                 }
 if ($item['enabled']=="0") {
-$ext->add('ext-did-0001', s, '', new  ext_Set('le'.$extno,FALSE));
+$ext->add('ext-did-0001', s, '', new  ext_Set('le'.$extno,'FALSE'));
                             }
 $ext->add('ext-did-0001', s, '',new ext_Execif('$[${le'.$extno.'}=TRUE]',AddQueueMember,$queueno.',Local/'.$extno.'@from-queue/n,,,'.$extno.',sip/'.$extno,RemoveQueueMember,$queueno.',Local/'.$extno.'@from-queue/n'));
 
