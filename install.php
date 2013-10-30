@@ -14,7 +14,7 @@ if($amp_conf["AMPDBENGINE"] == "sqlite3")  {
 $sql = " ALTER TABLE `timeconditions`
 ADD `timequeue` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL AFTER `falsegoto`,
 ADD `agent` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL AFTER `timequeue`,
-ADD  `enabled` INT( 1 ) NULL DEFAULT NULL AFTER `agent`;";
+ADD `enabled` INT( 1 ) NULL DEFAULT NULL AFTER `agent`;";
 
 }
 else  {
