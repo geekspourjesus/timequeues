@@ -11,10 +11,8 @@ if($amp_conf["AMPDBENGINE"] == "sqlite3")  {
 		`deptname` VARCHAR( 50 )
 	)
 	";
-$sql = " ALTER TABLE `timeconditions` ADD `timequeue` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL AFTER `falsegoto`,
-ADD`agent` VARCHAR(50) ,
-ADD `agent2` VARCHAR(50) ,
-ADD `agent3` VARCHAR(50) AFTER `timequeue`";
+$sql = 'ALTER TABLE `timeconditions` ADD `timequeue` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL AFTER `falsegoto`, ADD `agent` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL AFTER `timequeue`,ADD `enabled` TINYINT(1) NULL DEFAULT NULL AFTER `agent`;';
+  
 
 }
 else  {
@@ -28,10 +26,8 @@ else  {
 		`deptname` VARCHAR( 50 )
 	)
 	";
-$sql = " ALTER TABLE `timeconditions` ADD `timequeue` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL AFTER `falsegoto`,
-ADD`agent4` VARCHAR(50) ,
-ADD `agent5` VARCHAR(50) ,
-ADD `agent6` VARCHAR(50) AFTER `timequeue`";
+$sql = 'ALTER TABLE `timeconditions` ADD `timequeue` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL AFTER `falsegoto`, ADD `agent` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL AFTER `timequeue`,ADD `enabled` TINYINT(1) NULL DEFAULT NULL AFTER `agent`;';
+  ;
  
 }
 $check = $db->query($sql);
