@@ -104,26 +104,17 @@ function timequeues_check_destinations($dest=true) {
                 'edit_url' => $thisurl,
             );
         }
-        $thisdest = $result['agent'];
-        if ($dest === true || $dest = $thisdest) {
-            $destlist[] = array(
-                'dest' => $thisdest,
-                'description' => $description,
-                'edit_url' => $thisurl,
-            );
-        }
-        $thisdest = $result['enabled'];
-        if ($dest === true || $dest = $thisdest) {
-            $destlist[] = array(
-                'dest' => $thisdest,
-                'description' => $description,
-                'edit_url' => $thisurl,
-            );
-        }
-
     }
     return $destlist;
 }
+function timequeues_change_extension($old_dest, $new_dest) {
+	$sql = 'UPDATE timeconditions SET truegoto = "' . $new_dest . '" WHERE truegoto = "' . $old_dest . '"';
+	sql($sql, "query");
+	
+	$sql = 'UPDATE timeconditions SET falsegoto = "' . $new_dest . '" WHERE falsegoto = "' . $old_dest . '"';
+	sql($sql, "query");
+}
+
 function timequeues_add($post){
     if(!timequeues_chk($post)) {
         return false;
@@ -135,7 +126,8 @@ function timequeues_add($post){
     if(empty($displayname)) {
          $displayname = "unnamed";
     }
-    $results = sql("INSERT INTO timeconditions (displayname,time,timequeue,agent,deptname) values (\"$displayname\",\"$time\",\"${$goto0.'0'}\",\"${$goto1.'1'}\",\"$deptname\")");
+	$enable=!$disable;
+    $results = sql("INSERT INTO timeconditions (displayname,time,truegoto,falsegoto,timequeue,agent,enabled,deptname) values (\"$displayname\",\"$time\",\"${$goto0.'0'}\",\"${$goto1.'1'}\",\"$timequeue\",\"$agent\",\"$enable\",\"$deptname\")");
 }
 
 function timequeues_edit($id,$post){
@@ -149,15 +141,124 @@ function timequeues_edit($id,$post){
     if(empty($displayname)) { 
         $displayname = "unnamed";
     }
-
-    $results = sql("UPDATE timeconditions SET displayname = \"$displayname\", time = \"$time\", timequeue = \"${$goto0.'0'}\", agent = \"${$insexten.'1'}\", deptname = \"$deptname\" WHERE timeconditions_id = \"$id\"");
+	$enable=!$disable;
+    $results = sql("UPDATE timeconditions SET displayname = \"$displayname\", time = \"$time\", timequeue = \"$timequeue\", agent = \"$agent\", enabled = \"$enable\", deptname = \"$deptname\" WHERE timeconditions_id = \"$id\"");
 }
 
 // ensures post vars is valid
 function timequeues_chk($post){
     return true;
 }
+    function timequeues_del($id){
+        global $astnam;
+        $results = sql("DELETE FROM timeconditions WHERE timeconditions_id = \"$id\"","query");
+        
+        $fcc = new featurecode('timeconditions', 'toggle-mode-'.$id);
+        $fcc->delete();
+        unset($fcc);
+        if ($astman != null) {
+            $astman->database_del("TC",$id);
+        }
+    }
 
+
+
+/*
+The following functions are available to other modules.
+
+function timequeuemembers_list_queues()
+	returns an array of id and descriptions for any time groups defined by the user
+	the array contains inidces 0 and 1 for the rnav and associative value and text for select boxes
+
+
+function timeconditions_timegroups_buildtime( $hour_start, $minute_start, $hour_finish, $minute_finish, $wday_start, $wday_finish, $mday_start, $mday_finish, $month_start, $month_finish) 
+	should never be needed by another module, as this module should be the only place creating the time string, as it returns the string to other modules.
+
+function timequeuemembers__drawqueueselects($name, $time)
+	should never be needed by another module, as this module should be the only place drawing the time selects
+*/
+//$sql = "select extension, descr from queues_config order by descr";
+//lists any time groups defined by the user
+function timequeuemembers_list_queues() {
+global $db;
+	$tmparray = array();
+
+	$sql = "select extension, descr from queues_config order by descr";
+	$results = $db->getAll($sql);
+	if(DB::IsError($results)) {
+		$results = null;
+	}
+
+	foreach ($results as $val) {
+		$tmparray[] = array("value" => $val[0],"text" => $val[1]." (".$val[0].")");
+	}
+	return $tmparray;
+
+
+}
+
+function timequeuemembers_drawqueueselects($elemname, $currentvalue = '', $canbeempty = true, $onchange = '', $default_option = '') {
+	global $tabindex;
+	$output = '';
+	$onchange = ($onchange != '') ? " onchange=\"$onchange\"" : '';
+	
+	$output .= "\n\t\t\t<select name=\"$elemname\" tabindex=\"".++$tabindex."\" id=\"$elemname\"$onchange>\n";
+	// include blank option if required
+	if ($canbeempty) {
+		$output .= '<option value="">'.($default_option == '' ? _("== Select a Queue ==") : $default_option).'</option>';			
+	}
+	// build the options
+	$valarray = timequeuemembers_list_queues();
+	foreach ($valarray as $item) {
+		$itemvalue = (isset($item['value']) ? $item['value'] : '');
+		$itemtext = (isset($item['text']) ? _($item['text']) : '');
+		$itemselected = ($currentvalue == $itemvalue) ? ' selected' : '';
+		
+		$output .= "\t\t\t\t<option value=\"$itemvalue\"$itemselected>$itemtext</option>\n";
+	}
+	$output .= "\t\t\t</select>\n\t\t";
+	return $output;
+}
+    function timequeuemembers_list_extensions() {
+        global $db;
+        $tmparray = array();
+        
+        $sql = "select extension, descr from queues_config order by descr";
+        $results = $db->getAll($sql);
+        if(DB::IsError($results)) {
+            $results = null;
+        }
+        
+        $names = core_users_list();
+        foreach ($names as $val) {
+            $tmparray[] = array("value" => $val[0],"text" => $val[1]." (".$val[0].")");
+        }
+        return $tmparray;
+        
+        
+    }
+    function timequeuemembers_drawextensionselects($elemname, $currentvalue = '', $canbeempty = true, $onchange = '', $default_option = '') {
+        global $tabindex;
+        $output = '';
+        $onchange = ($onchange != '') ? " onchange=\"$onchange\"" : '';
+        
+        $output .= "\n\t\t\t<select name=\"$elemname\" tabindex=\"".++$tabindex."\" id=\"$elemname\"$onchange>\n";
+        // include blank option if required
+        if ($canbeempty) {
+            $output .= '<option value="">'.($default_option == '' ? _("== Select Extension ==") : $default_option).'</option>';
+        }
+        // build the options
+        $valarray = timequeuemembers_list_extensions();
+        foreach ($valarray as $item) {
+            $itemvalue = (isset($item['value']) ? $item['value'] : '');
+            $itemtext = (isset($item['text']) ? _($item['text']) : '');
+            $itemselected = ($currentvalue == $itemvalue) ? ' selected' : '';
+            
+            $output .= "\t\t\t\t<option value=\"$itemvalue\"$itemselected>$itemtext</option>\n";
+        }
+        $output .= "\t\t\t</select>\n\t\t";
+        return $output;
+    }
 
 
 ?>
