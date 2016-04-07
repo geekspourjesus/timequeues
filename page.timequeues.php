@@ -48,7 +48,7 @@ if (!defined('FREEPBX_IS_AUTH')) { die('No direct script access allowed'); }
 
 <!-- right side menu -->
 <div class="rnav"><ul>
-<li><a id="<?php echo ($itemid=='' ? 'current':'') ?>" href="config.php?display=<?php echo urlencode($dispnum)?>"><?php echo _("Add Time Condition")?></a></li>
+<li><a id="<?php echo ($itemid=='' ? 'current':'') ?>" href="config.php?display=<?php echo urlencode($dispnum)?>"><?php echo _("Add Time Queue")?></a></li>
 
 <?php
     if (isset($timeconditions)) {
@@ -62,10 +62,10 @@ if (!defined('FREEPBX_IS_AUTH')) { die('No direct script access allowed'); }
 <div class="content">
 <?php
     if ($action == 'delete') {
-        echo '<br><h3>'._("Time Condition").' '.$itemid.' '._("deleted").'!</h3>';
+        echo '<br><h3>'._("Add part time Members to a Queue").' '.$itemid.' '._("deleted").'!</h3>';
     } else {
         ?>
-<h2><?php echo ($itemid ? _("Time Condition:")." ". $itemid : _("Add part time Members to a Queue")); ?></h2>
+<h2><?php echo ($itemid ? _("Add part time Members to a Queue:")." ". $itemid : _("Add part time Members to a Queue")); ?></h2>
 <?php
 	if ($itemid){
 		$thisItem = timeconditions_get($itemid);
